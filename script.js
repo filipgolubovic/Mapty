@@ -26,7 +26,22 @@ const inputElevation = document.querySelector('.form__input--elevation');
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(
     function (position) {
-      console.log(position);
+      //leaflet
+      const { latitude } = position.coords;
+      const { longitude } = position.coords;
+
+      const cordinates = [latitude, longitude];
+      const map = L.map('map').setView(cordinates, 13);
+
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      L.marker(cordinates)
+        .addTo(map)
+        .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+        .openPopup();
     },
     function () {
       alert('Ne mozemo pronaci Vasu lokaciju!');
