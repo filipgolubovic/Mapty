@@ -25,12 +25,55 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 let map, mapEvent;
 
+//////Classes//////
+
+//Workout Class
+class Workout {
+  date = new Date();
+  id = new Date().getTime().toString(36);
+  constructor(coords, distance, duration) {
+    this.coords = coords; //cordinates[lat,lng]
+    this.distance = distance; //in km
+    this.duration = duration; // in min
+  }
+}
+///Running Class
+class Running extends Workout {
+  constructor(coords, distance, duration, cadence) {
+    super(coords, distance, duration);
+    this.cadence = cadence;
+    this.calculatePace();
+  }
+
+  calculatePace() {
+    this.pace = this.duration / this.distance;
+    return this.pace;
+  }
+}
+//Cycling Class
+class Cycling extends Workout {
+  constructor(coords, distance, duration, cadence, elevationGain) {
+    super(coords, distance, duration, cadence);
+    this.elevationGain = elevationGain;
+  }
+  calculateSpeed() {
+    const durationInHours = this.duration / 60;
+    this.speed = this.distance / durationInHours;
+    return this.speed;
+  }
+}
+
+const run1 = new Running([88, -25], 5.2, 28, 189);
+const cycle1 = new Cycling([88, -25], 27, 95, 523, 12);
+console.log(run1, cycle1);
+
+////////////////////////////////////////////////
+////// APPLICATION ARCHITECTURE ////////////////
 class App {
   #map;
   #mapEvent;
   constructor() {
     this._getPosition();
-
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleEvlevationField);
   }
